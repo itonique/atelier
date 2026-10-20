@@ -6,6 +6,13 @@
 <meta name="description" content="Alege anul în care te-ai născut și vezi ce se întâmpla atunci în România. Un instrument din Atelierul Curții lui Vodă.">
 <meta property="og:title" content="Anul tău · Curtea lui Vodă">
 <meta property="og:description" content="Tu ce an ești? Vezi ce se întâmpla în România în anul în care te-ai născut.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Curtea lui Vodă">
+<meta property="og:url" content="https://itonique.github.io/atelier/">
+<meta property="og:image" content="https://itonique.github.io/atelier/carduri/default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <title>Anul tău</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -57,7 +64,7 @@ button.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--li
 @media (max-width:480px){form{grid-template-columns:1fr 1fr;padding:16px}form .year{grid-column:1/-1}}
 
 .hero{display:flex;flex-direction:column;gap:4px;background:var(--card);border-radius:var(--r-lg);padding:22px 22px 18px;box-shadow:var(--shadow)}
-.big{font-family:var(--display);font-weight:800;font-size:clamp(5rem,26vw,9rem);line-height:.9;letter-spacing:-.02em;color:var(--ink)}
+.big{font-variant-numeric:lining-nums;font-family:var(--display);font-weight:800;font-size:clamp(5rem,26vw,9rem);line-height:.9;letter-spacing:-.02em;color:var(--ink)}
 .hero .lead{font-size:1.15rem;color:var(--ink-soft);margin:6px 0 0}
 
 section{display:flex;flex-direction:column;gap:14px}
@@ -311,24 +318,24 @@ function render(){
   h+=`<section><h2>Ziua ta în poveștile Curții</h2><div class="story"><p>${lead}</p>${ds.exact&&ds.items.length>1?ds.items.slice(1).map(z=>`<p>Tot pe ${z[0]} ${MONTHS[z[1]-1]}, în ${z[2]}, ${z[4]}.</p>`).join(""):""}<h3><a href="${s.u}" target="_blank" rel="noopener">${s.t}</a></h3></div></section>`;}
  else if(!d||!m){h+=`<section><h2>Ziua ta în poveștile Curții</h2><p class="empty">Alege și ziua și luna de mai sus ca să vezi ce s-a întâmplat în ziua ta, în poveștile de pe site.</p></section>`}
  h+=`<section><h2>Pune-l pe Facebook</h2><div class="share"><img id="card" alt="Imagine cu anul ${y}, gata de pus pe Facebook"><div class="how">
- <a class="fbbtn" id="fb" href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(SITE)}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 8.5V6.8c0-.8.5-1 .9-1H17V2.1L14.1 2C10.9 2 10.2 4.4 10.2 6v2.5H8V12h2.2v10H14V12h2.8l.4-3.5H14z"/></svg>Distribuie pe Facebook</a>
- <p>Pe telefon se deschide direct Facebook, cu imaginea ta. Pe calculator se deschide fereastra Facebook cu linkul spre joc.</p>
+ <a class="fbbtn" id="fb" href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(BASE+"an/"+y+"/")}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 8.5V6.8c0-.8.5-1 .9-1H17V2.1L14.1 2C10.9 2 10.2 4.4 10.2 6v2.5H8V12h2.2v10H14V12h2.8l.4-3.5H14z"/></svg>Distribuie pe Facebook</a>
+ <p>Se deschide fereastra Facebook cu anul ${y}. Scrii ce vrei și apeși „Postează”.</p>
+ <button type="button" class="ghost" id="other">Alte aplicații</button>
  <button type="button" class="ghost" id="copy">Copiază textul</button><span class="copied" id="copied"></span>
- <p class="meta">Sau ține degetul apăsat pe imagine și salveaz-o.</p>
- <p class="savehint" id="savehint" hidden><b>Telefonul tău nu lasă distribuirea directă.</b> Ține degetul apăsat pe imagine, alege „Salvează imaginea”, apoi pune-o într-o postare pe Facebook. Textul îl poți copia cu butonul de mai sus.</p></div></div></section>`;
+ <p class="savehint" id="savehint" hidden>Ține degetul apăsat pe imagine, alege „Salvează imaginea”, apoi trimite-o unde vrei. Textul îl poți copia cu butonul de mai sus.</p></div></div></section>`;
  $("out").innerHTML=h;
  const shareTxt=`M-am născut în ${y}. ${ev[0]?ev[0][1]:""} Tu ce an ești? Află pe tonivoda.com, la Atelier.`;
  $("copy").onclick=()=>{const done=()=>$("copied").textContent="Textul e copiat.";
   if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(shareTxt).then(done).catch(()=>{$("copied").textContent=shareTxt})}else{$("copied").textContent=shareTxt}};
  drawCard(y,name,ev,dateTxt);
- $("fb").addEventListener("click",async e=>{
+ $("other").addEventListener("click",async()=>{
+  const link=BASE+"an/"+y+"/";
   try{
-   const mobile=matchMedia("(pointer:coarse)").matches;
    const file=cardBlob?new File([cardBlob],`anul-meu-${y}.png`,{type:"image/png"}):null;
-   let can=false;try{can=!!(file&&navigator.canShare&&navigator.canShare({files:[file]}))}catch(_){}
-   if(can){e.preventDefault();await navigator.share({files:[file],text:shareTxt+" "+SITE});return}
-   if(mobile){e.preventDefault();const h=$("savehint");h.hidden=false;$("card").scrollIntoView({behavior:"smooth",block:"center"})}
-  }catch(err){}
+   if(file&&navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],text:shareTxt+" "+link});return}
+   if(navigator.share){await navigator.share({text:shareTxt,url:link});return}
+  }catch(err){if(err&&err.name==="AbortError")return}
+  $("savehint").hidden=false;$("card").scrollIntoView({behavior:"smooth",block:"center"});
  });
 }
 
@@ -358,9 +365,10 @@ async function drawCard(y,name,ev,dateTxt){
  c.toBlob(b=>{cardBlob=b},"image/png");
 }
 let cardBlob=null;
-const SITE="https://tonivoda.com/atelierul/";
+const BASE=new URL("./",location.href.split("?")[0].split("#")[0]).href;
 $("f").addEventListener("submit",e=>{e.preventDefault();render();$("out").scrollIntoView({behavior:"smooth",block:"start"})});
-$("year").value="1968";$("day").value="21";$("month").value="8";
+const qYear=+(new URLSearchParams(location.search).get("an")||0);
+if(qYear>=1940&&qYear<=2005){$("year").value=String(qYear)}else{$("year").value="1968";$("day").value="21";$("month").value="8"}
 render();
 </script>
 
