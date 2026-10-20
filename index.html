@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Alege anul în care te-ai născut și vezi ce se întâmpla atunci în România. Un instrument din Atelierul Curții lui Vodă.">
+<meta property="og:title" content="Anul tău · Curtea lui Vodă">
+<meta property="og:description" content="Tu ce an ești? Vezi ce se întâmpla în România în anul în care te-ai născut.">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Anul tău</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@500;600&family=Playfair+Display:wght@600;800&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+/* Layout: o singură coloană de lectură, ca o filă de almanah; anul e eroul paginii */
+:root{
+  --paper:#F7F4EE; --sand:#EFE8DC; --ink:#16120E; --ink-soft:#3A322B; --muted:#6B6259;
+  --line:#E4DCCF; --red:#A11D21; --red-ink:#FFFFFF; --rose:#E2A39A;
+  --card:#FFFDF9; --tint:#F6E7E2; --fb:#1877F2;
+  --shadow:0 1px 2px rgba(60,40,20,.06),0 6px 20px rgba(60,40,20,.07);
+  --r:14px; --r-lg:20px;
+  --display:"Playfair Display",Georgia,serif;
+  --body:"Source Serif 4",Georgia,serif;
+  --label:"IBM Plex Sans Condensed","Arial Narrow",sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#1C1714; --sand:#2A231E; --ink:#EFE7DA; --ink-soft:#D6CCBD; --muted:#A99D8E;
+  --line:#3B332C; --red:#E2A39A; --red-ink:#1C1714; --rose:#E2A39A;
+  --card:#241E1A; --tint:#3A2724; --fb:#2D88FF; --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#1C1714; --sand:#2A231E; --ink:#EFE7DA; --ink-soft:#D6CCBD; --muted:#A99D8E;
+  --line:#3B332C; --red:#E2A39A; --red-ink:#1C1714; --rose:#E2A39A;
+  --card:#241E1A; --tint:#3A2724; --fb:#2D88FF; --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25); color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.6;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:680px;margin:0 auto;padding-block:28px 56px;display:flex;flex-direction:column;gap:28px}
+.kicker{font-family:var(--label);font-weight:600;font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;color:var(--red)}
+.meta{font-family:var(--label);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+h1,h2,h3{font-family:var(--display);font-weight:800;line-height:1.1;margin:0;text-wrap:balance}
+header{display:flex;flex-direction:column;gap:8px;padding-bottom:4px}
+header h1{font-size:clamp(2.2rem,8vw,3.2rem)}
+header p{margin:0;color:var(--ink-soft);font-style:italic}
+.proto{font-family:var(--label);font-size:.75rem;letter-spacing:.06em;color:var(--muted);background:var(--sand);padding:6px 12px;align-self:flex-start;border-radius:999px}
+
+form{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;align-items:end;background:var(--card);padding:20px;border-radius:var(--r-lg);box-shadow:var(--shadow)}
+form .full{grid-column:1/-1}
+label{display:flex;flex-direction:column;gap:6px;font-family:var(--label);font-size:.76rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);min-width:0}
+select,input{font-family:var(--body);font-size:1.05rem;padding:12px 12px;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:12px;width:100%;min-width:0;-webkit-appearance:none;appearance:none}
+select{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 18px) 52%,calc(100% - 13px) 52%;background-size:5px 5px;background-repeat:no-repeat;padding-right:30px}
+select:focus,input:focus,button:focus-visible,a:focus-visible{outline:2px solid var(--red);outline-offset:2px}
+button{font-family:var(--label);font-weight:600;font-size:.92rem;letter-spacing:.1em;text-transform:uppercase;background:var(--red);color:var(--red-ink);border:0;padding:15px 22px;cursor:pointer;border-radius:999px;transition:transform .15s ease,box-shadow .15s ease}
+button:hover{transform:translateY(-1px);box-shadow:var(--shadow)}
+button.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+.fbbtn{font-family:var(--label);font-weight:600;font-size:.92rem;letter-spacing:.08em;text-transform:uppercase;background:var(--fb);color:#fff;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:15px 22px;border-radius:999px;box-shadow:var(--shadow)}
+.fbbtn svg{width:20px;height:20px;fill:currentColor;flex:none}
+@media (max-width:480px){form{grid-template-columns:1fr 1fr;padding:16px}form .year{grid-column:1/-1}}
+
+.hero{display:flex;flex-direction:column;gap:4px;background:var(--card);border-radius:var(--r-lg);padding:22px 22px 18px;box-shadow:var(--shadow)}
+.big{font-family:var(--display);font-weight:800;font-size:clamp(5rem,26vw,9rem);line-height:.9;letter-spacing:-.02em;color:var(--ink)}
+.hero .lead{font-size:1.15rem;color:var(--ink-soft);margin:6px 0 0}
+
+section{display:flex;flex-direction:column;gap:14px}
+section>h2{font-size:1.5rem;display:flex;align-items:center;gap:10px}
+section>h2::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--red);flex:none}
+.facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.fact{background:var(--card);padding:14px 16px;display:flex;flex-direction:column;gap:3px;min-width:0;border-radius:var(--r);box-shadow:var(--shadow)}
+.fact b{font-family:var(--display);font-size:1.3rem;line-height:1.15}
+@media (max-width:480px){.facts{grid-template-columns:1fr}}
+
+ol.events{list-style:none;margin:0;padding:6px 18px;display:flex;flex-direction:column;background:var(--card);border-radius:var(--r-lg);box-shadow:var(--shadow)}
+ol.events li{display:grid;grid-template-columns:4.6rem minmax(0,1fr);gap:12px;padding:14px 0;border-bottom:1px solid var(--line)}
+ol.events li:last-child{border-bottom:0}
+.tag{font-family:var(--label);font-weight:600;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--red);background:var(--tint);border-radius:999px;padding:3px 8px;align-self:start;justify-self:start;margin-top:3px;white-space:nowrap}
+.tag.world{color:var(--muted);background:var(--sand)}
+.empty{color:var(--muted);font-style:italic}
+
+.story{background:var(--tint);padding:18px 20px;display:flex;flex-direction:column;gap:8px;border-radius:var(--r-lg)}
+.story h3{font-size:1.2rem}
+.story a{color:var(--ink);text-decoration-color:var(--red);text-underline-offset:3px}
+.story p{margin:0;color:var(--ink-soft)}
+
+.share{display:grid;grid-template-columns:minmax(0,220px) minmax(0,1fr);gap:20px;align-items:start;background:var(--card);border-radius:var(--r-lg);padding:18px;box-shadow:var(--shadow)}
+.share img{width:100%;border-radius:12px;display:block;box-shadow:var(--shadow)}
+.share .how{display:flex;flex-direction:column;gap:10px}
+.share .how p{margin:0;color:var(--ink-soft)}
+.savehint{margin:0;background:var(--tint);color:var(--ink);padding:12px 14px;border-radius:12px}
+.copied{font-family:var(--label);font-size:.8rem;color:var(--muted);min-height:1.2em}
+@media (max-width:480px){.share{grid-template-columns:1fr}.share img{max-width:280px}}
+footer{border-top:1px solid var(--line);padding-top:12px;color:var(--muted);font-size:.9rem}
+footer a{color:var(--ink)}
+@media (prefers-reduced-motion:no-preference){.big{animation:rise .5s ease-out both}@keyframes rise{from{transform:translateY(8px);opacity:.4}to{transform:none;opacity:1}}}
+</style>
+</head>
+<body>
+
+
+<div class="wrap">
+  <header>
+    <span class="kicker">Atelierul · Curtea lui Vodă</span>
+    <h1>Anul tău</h1>
+    <p>Scrie anul în care te-ai născut și vezi ce se întâmpla atunci în România.</p>
+    <span class="proto">Prototip. Faptele se mai verifică înainte de lansare.</span>
+  </header>
+
+  <form id="f" autocomplete="off">
+    <label class="year">Anul nașterii
+      <select id="year"></select>
+    </label>
+    <label>Ziua (opțional)
+      <select id="day"><option value="">–</option></select>
+    </label>
+    <label>Luna (opțional)
+      <select id="month"><option value="">–</option></select>
+    </label>
+    <label class="full">Prenumele tău (opțional, apare pe imagine)
+      <input id="name" maxlength="24" placeholder="ex. Maria">
+    </label>
+    <button class="full" type="submit">Arată-mi anul</button>
+  </form>
+
+  <div id="out" style="display:flex;flex-direction:column;gap:32px"></div>
+
+  <footer>Un instrument din Atelierul <a href="https://tonivoda.com/atelierul/">Curții lui Vodă</a>. Poveștile întregi sunt pe <a href="https://tonivoda.com/povesti/">tonivoda.com</a>.</footer>
+</div>
+
+<script>
+const MONTHS=["ianuarie","februarie","martie","aprilie","mai","iunie","iulie","august","septembrie","octombrie","noiembrie","decembrie"];
+const S=u=>"https://tonivoda.com/"+u+"/";
+const STORIES={
+ teodoroiu:{n:"Ecaterina Teodoroiu",t:"Ecaterina Teodoroiu, sublocotenentul de la Mărășești",u:S("2026/10/20/ecaterina-teodoroiu")},
+ bratescu:{n:"Constantin Brătescu",t:"Constantin Brătescu, geograful Dobrogei",u:S("2026/10/21/constantin-bratescu")},
+ codreanu:{n:"Mihai Codreanu",t:"Mihai Codreanu, poetul care și-a dictat sonetele",u:S("2026/10/22/mihai-codreanu")},
+ nenitescu:{n:"Ioan S. Nenițescu",t:"Ioan S. Nenițescu, poetul „Puilor de lei”",u:S("2026/10/24/ioan-nenitescu")},
+ porumbescu:{n:"Ciprian Porumbescu",t:"Ciprian Porumbescu, compozitorul care a cântat mai departe",u:S("2026/10/25/ciprian-porumbescu")},
+ hossu:{n:"Iuliu Hossu",t:"Iuliu Hossu, episcopul care a citit Unirea",u:S("2026/10/26/iuliu-hossu")},
+ lipatti:{n:"Dinu Lipatti",t:"Dinu Lipatti și ultimul recital de la Besançon",u:S("2026/10/19/dinu-lipatti")},
+ racovita:{n:"Emil Racoviță",t:"Emil Racoviță, primul român care a ajuns în Antarctica",u:S("2026/10/17/emil-racovita")},
+ blecher:{n:"Max Blecher",t:"Max Blecher, scriitorul care a creat dintr-un pat de bolnav",u:S("2026/10/16/max-blecher")},
+ sylva:{n:"Carmen Sylva",t:"Carmen Sylva, regina care saluta vapoarele din Constanța",u:S("2026/10/15/carmen-sylva")},
+ cartan:{n:"Badea Cârțan",t:"Badea Cârțan, ciobanul care a mers pe jos până la Roma",u:S("2026/10/12/badea-cartan")},
+ luchian:{n:"Ștefan Luchian",t:"Ștefan Luchian, pictorul care n-a lăsat pensula",u:S("2026/10/12/stefan-luchian")},
+ canarache:{n:"Vasile Canarache",t:"Vasile Canarache, omul care a scos la lumină mozaicul de la Tomis",u:S("2026/10/18/vasile-canarache")},
+ ovidiu:{n:"Ovidiu",t:"Ovidiu, poetul trimis la marginea lumii",u:S("2026/10/12/ovidiu")}
+};
+/* zile din poveștile Curții: [zi, lună (1-12), an, cheie poveste, ce s-a întâmplat] */
+const DAYS=[
+ [14,1,1894,"teodoroiu","s-a născut Ecaterina Teodoroiu"],
+ [30,9,1882,"bratescu","s-a născut Constantin Brătescu, geograful Dobrogei"],
+ [23,10,1945,"bratescu","a murit Constantin Brătescu"],
+ [25,7,1876,"codreanu","s-a născut poetul Mihai Codreanu"],
+ [23,10,1957,"codreanu","a murit Mihai Codreanu, la Iași"],
+ [11,4,1854,"nenitescu","s-a născut Ioan S. Nenițescu, autorul „Puilor de lei”"],
+ [6,6,1883,"porumbescu","a murit Ciprian Porumbescu, la 29 de ani"],
+ [30,1,1885,"hossu","s-a născut Iuliu Hossu"],
+ [28,5,1970,"hossu","a murit Iuliu Hossu, primul cardinal greco-catolic român"],
+ [1,12,1918,"hossu","Iuliu Hossu a citit la Alba Iulia hotărârea de Unire"],
+ [19,3,1917,"lipatti","s-a născut pianistul Dinu Lipatti"],
+ [16,9,1950,"lipatti","Dinu Lipatti a cântat ultimul lui recital, la Besançon"],
+ [2,12,1950,"lipatti","a murit Dinu Lipatti, la 33 de ani"],
+ [15,11,1868,"racovita","s-a născut Emil Racoviță"],
+ [19,11,1947,"racovita","a murit Emil Racoviță, la Cluj"],
+ [8,9,1909,"blecher","s-a născut scriitorul Max Blecher"],
+ [31,5,1938,"blecher","a murit Max Blecher, la 28 de ani"],
+ [29,12,1843,"sylva","s-a născut regina Elisabeta, Carmen Sylva"],
+ [2,3,1916,"sylva","a murit regina Elisabeta, Carmen Sylva"],
+ [24,1,1849,"cartan","s-a născut Badea Cârțan"],
+ [7,8,1911,"cartan","a murit Badea Cârțan"],
+ [1,2,1868,"luchian","s-a născut pictorul Ștefan Luchian"],
+ [28,6,1916,"luchian","a murit Ștefan Luchian"],
+ [6,2,1896,"canarache","s-a născut arheologul Vasile Canarache"],
+ [6,8,1959,"canarache","s-a dat de mozaicul roman din centrul Constanței"],
+ [1,4,1962,"canarache","muncitorii au găsit la Constanța tezaurul de statui cu șarpele Glykon"],
+ [4,8,1969,"canarache","a murit Vasile Canarache"]
+];
+/* poveștile Curții care ating anul respectiv */
+const YEAR_STORY={
+ 1945:["bratescu","În toamna lui 1945 murea Constantin Brătescu, omul care a descris Delta și lacurile Dobrogei."],
+ 1947:["racovita","În 1947 murea la Cluj Emil Racoviță, primul român care a ajuns în Antarctica."],
+ 1948:["hossu","În toamna lui 1948 era arestat episcopul Iuliu Hossu, omul care citise Unirea la Alba Iulia."],
+ 1950:["lipatti","În septembrie 1950, Dinu Lipatti urca bolnav pe scena de la Besançon, pentru ultimul lui recital."],
+ 1957:["codreanu","În 1957 murea Mihai Codreanu, poetul care și-a dictat sonetele aproape cincizeci de ani."],
+ 1959:["canarache","Pe 6 august 1959, în centrul Constanței, un târnăcop a dat de un mozaic roman."],
+ 1962:["canarache","Pe 1 aprilie 1962, la Constanța, au ieșit din pământ șarpele Glykon și zeița Fortuna."],
+ 1969:["hossu","În 1969, papa l-a făcut în secret cardinal pe Iuliu Hossu, ținut sub pază la Căldărușani."],
+ 1970:["hossu","În 1970 murea Iuliu Hossu. Abia trei ani mai târziu s-a aflat că fusese cardinal."],
+ 1971:["blecher","În 1971 apărea integral „Vizuina luminată”, jurnalul de sanatoriu al lui Max Blecher."],
+ 1981:["luchian","În 1981 rula în cinematografe filmul „Ștefan Luchian”, cu Ion Caramitru."],
+ 1995:["nenitescu","În 1995, bustul lui Ioan S. Nenițescu a fost pus din nou la locul lui, în Tulcea."],
+ 1996:["sylva","În 1996, în fostul „Cuib al Reginei” de pe digul Constanței, s-a deschis Muzeul Portului."]
+};
+/* evenimente: R = România, L = în lume */
+const EV={
+1940:[["R","În iunie, România cedează Basarabia și nordul Bucovinei Uniunii Sovietice."],["R","Pe 30 august, prin Dictatul de la Viena, nordul Transilvaniei trece la Ungaria."],["R","Pe 6 septembrie, Carol al II-lea abdică. Regele devine fiul lui, Mihai I, iar Ion Antonescu preia conducerea statului."],["R","Pe 10 noiembrie, un cutremur puternic dărâmă Blocul Carlton din București."]],
+1941:[["R","În ianuarie, rebeliunea legionară e înăbușită de armata lui Antonescu."],["R","Pe 22 iunie, România intră în război alături de Germania."],["R","La sfârșitul lui iunie are loc pogromul de la Iași, în care sunt uciși mii de evrei."]],
+1942:[["R","În noiembrie, la Cotul Donului și la Stalingrad, armatele române suferă pierderi uriașe."],["L","Războiul cuprinde aproape toată lumea."],["R","Din vară, mii de romi sunt deportați în Transnistria."]],
+1943:[["R","Pe 1 august, avioanele americane bombardează rafinăriile de la Ploiești."],["L","Germania pierde bătălia de la Stalingrad, la începutul anului."]],
+1944:[["R","Pe 4 aprilie, Bucureștiul e bombardat de aviația americană."],["R","Pe 23 august, Regele Mihai îl arestează pe Antonescu, iar România trece de partea Aliaților."],["L","Pe 6 iunie, Aliații debarcă în Normandia."]],
+1945:[["R","Pe 6 martie se instalează guvernul Petru Groza, impus de Moscova."],["L","Pe 9 mai se termină războiul în Europa."],["L","În august, Statele Unite aruncă bombele atomice asupra Hiroshimei și Nagasakiului."]],
+1946:[["R","Pe 1 iunie, Ion Antonescu e executat la Jilava."],["R","Pe 19 noiembrie au loc alegeri, falsificate în favoarea comuniștilor."],["R","În Moldova începe foametea care va ține până în 1947."]],
+1947:[["R","Pe 10 februarie, prin Tratatul de pace de la Paris, nordul Transilvaniei revine României."],["R","În august, o reformă monetară golește economiile oamenilor."],["R","Pe 30 decembrie, Regele Mihai e silit să abdice. Se proclamă Republica Populară Română."]],
+1948:[["R","Pe 11 iunie sunt naționalizate fabricile, minele, băncile și firmele mari."],["R","În august se înființează Securitatea."],["R","În decembrie, Biserica Greco-Catolică e desființată."]],
+1949:[["R","În martie începe colectivizarea agriculturii."],["R","Încep lucrările la Canalul Dunăre–Marea Neagră, unde muncesc și deținuți politici."]],
+1950:[["R","În septembrie, județele sunt înlocuite cu regiuni și raioane, după model sovietic."],["L","În iunie începe Războiul din Coreea."]],
+1951:[["R","În noaptea de Rusalii, 18 iunie, zeci de mii de oameni din Banat sunt deportați în Bărăgan."],["R","Începe primul plan cincinal, cu industrializare forțată după model sovietic."]],
+1952:[["R","În ianuarie, o nouă reformă monetară lovește din nou economiile oamenilor."],["R","În septembrie se adoptă o nouă Constituție."]],
+1953:[["R","În august, Bucureștiul găzduiește Festivalul Mondial al Tineretului și Studenților."],["R","Lucrările la Canalul Dunăre–Marea Neagră sunt oprite."],["L","Pe 5 martie moare Stalin."],["L","Pe 29 mai, Edmund Hillary și Tenzing Norgay urcă pe Everest."]],
+1954:[["R","Încep să fie desființate Sovromurile, societățile prin care URSS controla o parte din economia românească."],["L","În mai, francezii pierd bătălia de la Dien Bien Phu, în Indochina."]],
+1955:[["R","Pe 14 decembrie, România devine membră a ONU."],["L","În mai se semnează Tratatul de la Varșovia."]],
+1956:[["R","În toamnă, după revolta din Ungaria, studenții de la București, Cluj și Timișoara protestează și sunt arestați."],["R","Pe 31 decembrie, Televiziunea Română transmite prima emisiune."]],
+1957:[["L","Pe 4 octombrie, sovieticii lansează Sputnik, primul satelit artificial."],["L","În martie, prin Tratatul de la Roma, se naște Comunitatea Economică Europeană."]],
+1958:[["R","În vara lui 1958, trupele sovietice pleacă din România."]],
+1959:[["L","La 1 ianuarie, Fidel Castro preia puterea în Cuba."],["R","La Cluj, universitatea maghiară Bolyai e unită cu cea românească Babeș. Se naște Universitatea Babeș-Bolyai."]],
+1960:[["R","La Olimpiada de la Roma, Iolanda Balaș câștigă aurul la săritura în înălțime."]],
+1961:[["L","Pe 12 aprilie, Iuri Gagarin devine primul om în spațiu."],["L","În august se ridică Zidul Berlinului."]],
+1962:[["R","În aprilie se anunță încheierea colectivizării agriculturii."],["L","În octombrie, criza rachetelor din Cuba aduce lumea aproape de un război nuclear."]],
+1963:[["L","Pe 22 noiembrie, președintele american John F. Kennedy e asasinat la Dallas."]],
+1964:[["R","În aprilie, Declarația din aprilie arată că România vrea să se desprindă de Moscova."],["R","O amnistie generală eliberează mii de deținuți politici."],["R","La Olimpiada de la Tokyo, Iolanda Balaș își apără titlul."]],
+1965:[["R","Pe 19 martie moare Gheorghe Gheorghiu-Dej. Nicolae Ceaușescu devine liderul partidului."],["R","În august, țara devine Republica Socialistă România, cu o nouă Constituție."]],
+1966:[["R","Pe 1 octombrie, Decretul 770 interzice avortul. Urmează generația „decreței”."],["R","La Colibași, lângă Pitești, începe construcția uzinei Dacia."]],
+1967:[["R","În ianuarie, România stabilește relații diplomatice cu Germania de Vest, singura din blocul sovietic."],["L","În iunie, Israelul câștigă Războiul de Șase Zile."]],
+1968:[["R","În februarie revin județele, în locul regiunilor."],["R","Pe 21 august, Ceaușescu condamnă public invadarea Cehoslovaciei."],["R","În august iese de pe banda de la Pitești prima Dacia 1100."]],
+1969:[["R","În august, Richard Nixon vizitează Bucureștiul, primul președinte american într-o țară comunistă."],["L","Pe 21 iulie, ora României, Neil Armstrong pășește pe Lună."]],
+1970:[["R","În mai, inundații uriașe lovesc mai ales Transilvania și Moldova."]],
+1971:[["R","În iulie, Ceaușescu anunță „Tezele din iulie”, începutul unei noi strângeri a șurubului în cultură."],["R","În iunie, Ceaușescu vizitează China și Coreea de Nord, de unde se întoarce cu modelul cultului personalității."]],
+1972:[["R","Pe 16 mai se inaugurează hidrocentrala Porțile de Fier I, construită cu Iugoslavia."],["R","România intră în Fondul Monetar Internațional și în Banca Mondială."]],
+1973:[["R","În august, Ilie Năstase devine primul număr 1 mondial din istoria clasamentului ATP."],["L","În octombrie începe criza petrolului: prețul benzinei explodează în toată lumea."]],
+1974:[["R","Pe 28 martie, Nicolae Ceaușescu devine președintele țării."],["R","Pe 20 septembrie se inaugurează Transfăgărășanul."]],
+1975:[["R","În iulie, inundațiile acoperă mari părți din țară."],["L","În august se semnează Actul final de la Helsinki."]],
+1976:[["R","Pe 18 iulie, la Montreal, Nadia Comăneci primește primul 10 din istoria gimnasticii olimpice."]],
+1977:[["R","Pe 4 martie, un cutremur de 7,2 grade ucide aproape 1.600 de oameni, cei mai mulți în București."],["R","În august, minerii din Valea Jiului intră în grevă."]],
+1978:[["R","În iulie, generalul de Securitate Ion Mihai Pacepa fuge în Statele Unite."],["L","În octombrie, cardinalul polonez Karol Wojtyła devine papa Ioan Paul al II-lea."]],
+1979:[["R","Pe 16 noiembrie se deschide prima linie de metrou din București."],["L","În Iran, revoluția îl alungă pe șah și aduce la putere regimul ayatollahilor."]],
+1980:[["R","La Olimpiada de la Moscova, Nadia Comăneci câștigă încă două medalii de aur."]],
+1981:[["R","Pe 14 mai, Dumitru Prunariu devine primul român care zboară în spațiu."],["R","Pâinea, uleiul și zahărul încep să se dea pe cartelă."]],
+1982:[["L","În primăvară, Marea Britanie și Argentina se luptă pentru Insulele Malvine."]],
+1983:[["R","Un decret obligă orice mașină de scris să fie înregistrată la Miliție."]],
+1984:[["R","Pe 26 mai se inaugurează Canalul Dunăre–Marea Neagră."],["R","La Olimpiada de la Los Angeles, boicotată de celelalte țări din Est, România câștigă 53 de medalii."]],
+1985:[["R","Iarna e grea: apartamente friguroase, lumină puțină, cozi la alimente."],["L","În martie, Mihail Gorbaciov ajunge la conducerea Uniunii Sovietice."]],
+1986:[["R","Pe 7 mai, la Sevilla, Steaua câștigă Cupa Campionilor Europeni. Helmuth Duckadam apără patru penaltiuri."],["L","Pe 26 aprilie explodează centrala nucleară de la Cernobîl."]],
+1987:[["R","Pe 15 noiembrie, muncitorii de la Steagul Roșu din Brașov ies în stradă împotriva regimului."]],
+1988:[["R","Regimul anunță planul de „sistematizare”, care prevede dărâmarea a mii de sate."]],
+1989:[["R","Pe 16 decembrie începe revolta de la Timișoara. Pe 22 decembrie, Ceaușescu fuge din București."],["L","Pe 9 noiembrie cade Zidul Berlinului."]],
+1990:[["R","Pe 20 mai au loc primele alegeri libere după război."],["R","Pe 13–15 iunie, minerii veniți la București devastează Piața Universității."]],
+1991:[["R","Pe 27 august, Republica Moldova își declară independența."],["R","Pe 8 decembrie, noua Constituție e aprobată prin referendum."],["L","În decembrie se destramă Uniunea Sovietică."]],
+1992:[["R","În toamnă, Ion Iliescu e reales președinte."],["R","În februarie au loc primele alegeri locale libere după 1989."]],
+1993:[["R","Pe 7 octombrie, România intră în Consiliul Europei."]],
+1994:[["R","La Mondialul din SUA, naționala lui Hagi ajunge în sferturile de finală."]],
+1995:[["R","În iunie, România cere oficial să intre în Uniunea Europeană."]],
+1996:[["R","În noiembrie, Emil Constantinescu câștigă alegerile. E prima schimbare pașnică de putere după 1989."]],
+1997:[["R","Pe 11 iulie, președintele american Bill Clinton vorbește în Piața Universității."]],
+1998:[["L","În septembrie se înființează, în California, firma Google."]],
+1999:[["R","În ianuarie, minerii pornesc din nou spre București și sunt opriți la Stoenești."],["R","Pe 11 august, eclipsa totală de soare se vede cel mai bine din România."],["L","Pe 1 ianuarie apare moneda euro."]],
+2000:[["R","În februarie încep negocierile de aderare la Uniunea Europeană."],["R","În decembrie, Ion Iliescu e ales din nou președinte."]],
+2001:[["L","Pe 11 septembrie, atentatele teroriste lovesc New Yorkul și Washingtonul."]],
+2002:[["R","În noiembrie, România e invitată în NATO. Președintele George W. Bush vine la București."]],
+2003:[["R","În octombrie, Constituția e revizuită prin referendum, ca să pregătească intrarea în Uniunea Europeană."]],
+2004:[["R","Pe 29 martie, România intră în NATO."],["R","În decembrie, Traian Băsescu e ales președinte."]],
+2005:[["R","Pe 25 aprilie se semnează Tratatul de aderare la Uniunea Europeană."],["R","Pe 1 iulie apare leul greu: 10.000 de lei vechi devin 1 leu."],["R","Vara aduce cele mai grave inundații din ultimele decenii."]]
+};
+function regime(y){
+ if(y<=1947) return "Regatul României";
+ if(y<=1964) return "Republica Populară Română";
+ if(y<=1989) return "Republica Socialistă România";
+ return "România";
+}
+function leader(y){
+ if(y===1940) return ["Carol al II-lea, apoi Mihai I și Ion Antonescu","rege și conducătorul statului"];
+ if(y<=1943) return ["Ion Antonescu","conducătorul statului, sub regele Mihai I"];
+ if(y===1944) return ["Regele Mihai I","după 23 august"];
+ if(y<=1947) return ["Regele Mihai I","cu guvernul Petru Groza"];
+ if(y<=1964) return ["Gheorghe Gheorghiu-Dej","liderul Partidului Muncitoresc Român"];
+ if(y===1965) return ["Nicolae Ceaușescu","de la 22 martie"];
+ if(y<=1989) return ["Nicolae Ceaușescu", y>=1974?"președintele țării":"liderul partidului"];
+ if(y<=1996) return ["Ion Iliescu","președinte"];
+ if(y<=2000) return ["Emil Constantinescu","președinte"];
+ if(y<=2004) return ["Ion Iliescu","președinte"];
+ return ["Traian Băsescu","președinte"];
+}
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+for(let y=2005;y>=1940;y--){const o=document.createElement("option");o.value=y;o.textContent=y;$("year").appendChild(o)}
+for(let d=1;d<=31;d++){const o=document.createElement("option");o.value=d;o.textContent=d;$("day").appendChild(o)}
+MONTHS.forEach((m,i)=>{const o=document.createElement("option");o.value=i+1;o.textContent=m;$("month").appendChild(o)});
+
+function dayStory(d,m){
+ if(!d||!m) return null;
+ const exact=DAYS.filter(x=>x[0]===d&&x[1]===m);
+ if(exact.length) return {exact:true,items:exact};
+ const doy=(dd,mm)=>new Date(2001,mm-1,dd).getTime()/864e5;
+ const t=doy(d,m);let best=null,bd=1e9;
+ for(const x of DAYS){let diff=Math.abs(doy(x[0],x[1])-t);diff=Math.min(diff,365-diff);if(diff<bd){bd=diff;best=x}}
+ return {exact:false,items:[best],gap:Math.round(bd)};
+}
+
+function render(){
+ const y=+$("year").value,d=+$("day").value||0,m=+$("month").value||0,name=$("name").value.trim();
+ const ev=EV[y]||[];const [ld,lr]=leader(y);const since=y-1918;
+ const ds=dayStory(d,m);const ys=YEAR_STORY[y];
+ const dateTxt=d&&m?`${d} ${MONTHS[m-1]} ${y}`:String(y);
+ let h=`<div class="hero"><span class="kicker">${name?esc(name)+", te-ai născut în":"Te-ai născut în"}</span><div class="big">${y}</div>
+ <p class="lead">${d&&m?`Pe ${d} ${MONTHS[m-1]}. `:""}Iată cum arăta țara în anul tău.</p></div>`;
+ h+=`<section><h2>Țara, atunci</h2><div class="facts">
+ <div class="fact"><span class="meta">Țara se numea</span><b>${regime(y)}</b></div>
+ <div class="fact"><span class="meta">La conducere</span><b>${ld}</b><span class="meta">${lr}</span></div>
+ <div class="fact"><span class="meta">De la Marea Unire</span><b>${since} de ani</b><span class="meta">din 1918</span></div></div></section>`;
+ h+=`<section><h2>Ce se întâmpla în ${y}</h2>${ev.length?`<ol class="events">${ev.map(e=>`<li><span class="tag ${e[0]==="L"?"world":""}">${e[0]==="L"?"În lume":"România"}</span><span>${e[1]}</span></li>`).join("")}</ol>`:`<p class="empty">Încă adunăm momentele acestui an.</p>`}</section>`;
+ if(ys){const s=STORIES[ys[0]];h+=`<section><h2>Anul tău în poveștile Curții</h2><div class="story"><p>${ys[1]}</p><h3><a href="${s.u}" target="_blank" rel="noopener">${s.t}</a></h3><span class="meta">Citește povestea pe tonivoda.com</span></div></section>`}
+ if(ds){const x=ds.items[0],s=STORIES[x[3]];
+  const lead=ds.exact?`Pe ${x[0]} ${MONTHS[x[1]-1]}, ziua ta, dar în ${x[2]}, ${x[4]}.`:`Cea mai apropiată zi de a ta din poveștile Curții: pe ${x[0]} ${MONTHS[x[1]-1]} ${x[2]} ${x[4]}.`;
+  h+=`<section><h2>Ziua ta în poveștile Curții</h2><div class="story"><p>${lead}</p>${ds.exact&&ds.items.length>1?ds.items.slice(1).map(z=>`<p>Tot pe ${z[0]} ${MONTHS[z[1]-1]}, în ${z[2]}, ${z[4]}.</p>`).join(""):""}<h3><a href="${s.u}" target="_blank" rel="noopener">${s.t}</a></h3></div></section>`;}
+ else if(!d||!m){h+=`<section><h2>Ziua ta în poveștile Curții</h2><p class="empty">Alege și ziua și luna de mai sus ca să vezi ce s-a întâmplat în ziua ta, în poveștile de pe site.</p></section>`}
+ h+=`<section><h2>Pune-l pe Facebook</h2><div class="share"><img id="card" alt="Imagine cu anul ${y}, gata de pus pe Facebook"><div class="how">
+ <a class="fbbtn" id="fb" href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(SITE)}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 8.5V6.8c0-.8.5-1 .9-1H17V2.1L14.1 2C10.9 2 10.2 4.4 10.2 6v2.5H8V12h2.2v10H14V12h2.8l.4-3.5H14z"/></svg>Distribuie pe Facebook</a>
+ <p>Pe telefon se deschide direct Facebook, cu imaginea ta. Pe calculator se deschide fereastra Facebook cu linkul spre joc.</p>
+ <button type="button" class="ghost" id="copy">Copiază textul</button><span class="copied" id="copied"></span>
+ <p class="meta">Sau ține degetul apăsat pe imagine și salveaz-o.</p>
+ <p class="savehint" id="savehint" hidden><b>Telefonul tău nu lasă distribuirea directă.</b> Ține degetul apăsat pe imagine, alege „Salvează imaginea”, apoi pune-o într-o postare pe Facebook. Textul îl poți copia cu butonul de mai sus.</p></div></div></section>`;
+ $("out").innerHTML=h;
+ const shareTxt=`M-am născut în ${y}. ${ev[0]?ev[0][1]:""} Tu ce an ești? Află pe tonivoda.com, la Atelier.`;
+ $("copy").onclick=()=>{const done=()=>$("copied").textContent="Textul e copiat.";
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(shareTxt).then(done).catch(()=>{$("copied").textContent=shareTxt})}else{$("copied").textContent=shareTxt}};
+ drawCard(y,name,ev,dateTxt);
+ $("fb").addEventListener("click",async e=>{
+  try{
+   const mobile=matchMedia("(pointer:coarse)").matches;
+   const file=cardBlob?new File([cardBlob],`anul-meu-${y}.png`,{type:"image/png"}):null;
+   let can=false;try{can=!!(file&&navigator.canShare&&navigator.canShare({files:[file]}))}catch(_){}
+   if(can){e.preventDefault();await navigator.share({files:[file],text:shareTxt+" "+SITE});return}
+   if(mobile){e.preventDefault();const h=$("savehint");h.hidden=false;$("card").scrollIntoView({behavior:"smooth",block:"center"})}
+  }catch(err){}
+ });
+}
+
+function wrapText(ctx,text,x,y,maxW,lh,maxLines){
+ const words=text.split(" ");let line="",lines=[];
+ for(const w of words){const t=line?line+" "+w:w;if(ctx.measureText(t).width>maxW&&line){lines.push(line);line=w}else line=t}
+ if(line)lines.push(line);
+ if(lines.length>maxLines){lines=lines.slice(0,maxLines);lines[maxLines-1]=lines[maxLines-1].replace(/\s+\S*$/,"")+"…"}
+ lines.forEach((l,i)=>ctx.fillText(l,x,y+i*lh));return lines.length*lh;
+}
+async function drawCard(y,name,ev,dateTxt){
+ try{await Promise.all([document.fonts.load('800 100px "Playfair Display"'),document.fonts.load('400 40px "Source Serif 4"'),document.fonts.load('600 30px "IBM Plex Sans Condensed"')])}catch(e){}
+ const W=1080,H=1350,c=document.createElement("canvas");c.width=W;c.height=H;const x=c.getContext("2d");
+ x.fillStyle="#F7F4EE";x.fillRect(0,0,W,H);
+ x.fillStyle="#16120E";x.fillRect(80,96,W-160,8);x.fillRect(80,112,W-160,2);
+ x.fillStyle="#A11D21";x.font='600 30px "IBM Plex Sans Condensed","Arial Narrow",sans-serif';
+ x.fillText("CURTEA LUI VODĂ · ANUL TĂU",80,170);
+ x.fillStyle="#3A322B";x.font='italic 400 44px "Source Serif 4",Georgia,serif';
+ x.fillText(name?`${name} s-a născut în`:"M-am născut în",80,260);
+ x.fillStyle="#16120E";x.font='800 300px "Playfair Display",Georgia,serif';x.fillText(String(y),66,530);
+ let cy=640;x.font='400 38px "Source Serif 4",Georgia,serif';
+ ev.slice(0,3).forEach(e=>{x.fillStyle="#A11D21";x.fillRect(80,cy-26,14,14);x.fillStyle="#16120E";cy+=wrapText(x,e[1],120,cy,W-200,52,3)+28});
+ x.fillStyle="#D9D1C4";x.fillRect(80,H-150,W-160,2);
+ x.fillStyle="#16120E";x.font='600 34px "IBM Plex Sans Condensed","Arial Narrow",sans-serif';x.fillText("Tu ce an ești?",80,H-90);
+ x.fillStyle="#A11D21";x.textAlign="right";x.fillText("tonivoda.com",W-80,H-90);
+ const img=$("card");if(img)img.src=c.toDataURL("image/png");
+ c.toBlob(b=>{cardBlob=b},"image/png");
+}
+let cardBlob=null;
+const SITE="https://tonivoda.com/atelierul/";
+$("f").addEventListener("submit",e=>{e.preventDefault();render();$("out").scrollIntoView({behavior:"smooth",block:"start"})});
+$("year").value="1968";$("day").value="21";$("month").value="8";
+render();
+</script>
+
+</body>
+</html>
